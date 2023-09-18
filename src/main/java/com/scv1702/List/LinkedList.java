@@ -3,9 +3,11 @@ package com.scv1702.List;
 import java.util.NoSuchElementException;
 
 public class LinkedList<E> implements List<E> {
-    int size;
-    Node<E> head;
-    Node<E> tail;
+    protected int size;
+    protected Node<E> head;
+    protected Node<E> tail;
+
+    public LinkedList() {}
 
     @Override
     public String toString() {
@@ -13,8 +15,8 @@ public class LinkedList<E> implements List<E> {
         Node<E> curr = head;
         sb.append("[");
         while (curr != null) {
-            sb.append(curr.data).append(", ");
-            curr = curr.next;
+            sb.append(curr.getData()).append(", ");
+            curr = curr.getNext();
         }
         if (sb.length() > 2) {
             sb.deleteCharAt(sb.length()-1);
@@ -28,19 +30,18 @@ public class LinkedList<E> implements List<E> {
         if (index >= size || index < 0) throw new IndexOutOfBoundsException(index);
         Node<E> curr = head;
         for (int i = 0; i < index; i++) {
-            curr = curr.next;
+            curr = curr.getNext();
         }
         return curr;
     }
 
     @Override
     public E get(int index) {
-        return getNode(index).data;
+        return getNode(index).getData();
     }
 
     public void addFirst(E value) {
-        Node<E> node = new Node<>(value);
-        node.next = head;
+        Node<E> node = new Node<>(value, head);
         head = node;
         if (tail == null) {
             tail = node;
@@ -54,7 +55,7 @@ public class LinkedList<E> implements List<E> {
             return ;
         }
         Node<E> node = new Node<>(value);
-        tail.next = node;
+        tail.setNext(node);
         tail = node;
         size++;
     }
@@ -77,16 +78,16 @@ public class LinkedList<E> implements List<E> {
             return ;
         }
         Node<E> prev = getNode(index-1);
-        Node<E> curr = new Node<>(value, prev.next);
-        prev.next = curr;
+        Node<E> curr = new Node<>(value, prev.getNext());
+        prev.setNext(curr);
     }
 
     public E remove() {
         if (size <= 0) throw new NoSuchElementException();
-        E res = head.data;
-        Node<E> nextHead = head.next;
-        head.data = null;
-        head.next = null;
+        E res = head.getData();
+        Node<E> nextHead = head.getNext();
+        head.setData(null);
+        head.setNext(null);
         head = nextHead;
         size--;
         if (size == 0) {
@@ -101,11 +102,11 @@ public class LinkedList<E> implements List<E> {
         if (index >= size || index < 0) throw new IndexOutOfBoundsException(index);
         if (size <= 0) throw new NoSuchElementException();
         Node<E> prev = getNode(index-1);
-        Node<E> next = prev.next.next;
-        E res = prev.next.data;
-        prev.next.data = null;
-        prev.next.next = null;
-        prev.next = next;
+        Node<E> next = prev.getNext().getNext();
+        E res = prev.getNext().getData();
+        prev.getNext().setData(null);
+        prev.getNext().setNext(null);
+        prev.setNext(next);
         size--;
         if (next == null) {
             tail = prev;
@@ -120,12 +121,12 @@ public class LinkedList<E> implements List<E> {
         Node<E> prev = null;
         Node<E> curr = head;
         while (curr != null) {
-            if (value.equals(curr.next)) {
+            if (value.equals(curr.getNext())) {
                 hasValue = true;
                 break;
             }
             prev = curr;
-            curr = curr.next;
+            curr = curr.getNext();
         }
         if (curr == null) return false;
         if (curr == head) {
@@ -133,10 +134,10 @@ public class LinkedList<E> implements List<E> {
             return true;
         }
         if (hasValue) {
-            Node<E> next = curr.next;
-            curr.data = null;
-            curr.next = null;
-            prev.next = next;
+            Node<E> next = curr.getNext();
+            curr.setData(null);
+            curr.setNext(null);
+            prev.setNext(next);
             size--;
             if (next == null) {
                 tail = prev;
@@ -148,7 +149,7 @@ public class LinkedList<E> implements List<E> {
     @Override
     public void set(int index, E value) {
         Node<E> node = getNode(index);
-        node.data = value;
+        node.setData(value);
     }
 
     @Override
@@ -156,10 +157,10 @@ public class LinkedList<E> implements List<E> {
         if (value == null) throw new NoSuchElementException();
         Node<E> curr = head;
         while (curr != head) {
-            if (value.equals(curr.data)) {
+            if (value.equals(curr.getData())) {
                 return true;
             }
-            curr = curr.next;
+            curr = curr.getNext();
         }
         return false;
     }
@@ -170,10 +171,10 @@ public class LinkedList<E> implements List<E> {
         int index = 0;
         Node<E> curr = head;
         while (curr != head) {
-            if (value.equals(curr.data)) {
+            if (value.equals(curr.getData())) {
                 return index;
             }
-            curr = curr.next;
+            curr = curr.getNext();
             index++;
         }
         return -1;

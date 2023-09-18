@@ -1,3 +1,4 @@
+package List;
 import com.scv1702.List.*;
 
 import static org.assertj.core.api.Assertions.*;
@@ -24,5 +25,26 @@ public class LinkedListTest {
         list.addLast(2);
         list.addLast(3);
         assertThat(list.toString()).isEqualTo("[1, 2, 3]");
+    }
+
+    @DisplayName("remove()")
+    @Test
+    void removeTest() {
+        LinkedList<Integer> list = new LinkedList<>();
+        list.addLast(1);
+        list.addLast(2);
+        list.addLast(3);
+        list.remove();
+        assertThat(list.toString()).isEqualTo("[2, 3]");
+    }
+
+    @DisplayName("get()")
+    @Test
+    void getTest() {
+        LinkedList<Integer> list = new LinkedList<>();
+        list.addLast(1);
+        list.addLast(2);
+        list.addLast(3);
+        assertThat(list.get(1)).isEqualTo(2);
     }
 }
